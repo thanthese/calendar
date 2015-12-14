@@ -5,9 +5,7 @@ import (
 	"time"
 )
 
-const separator = "----------------------------------------"
-
-func printIrregular(recs recs, today time.Time) {
+func printIrregular(recs recs, today time.Time) (out string) {
 	if len(recs) == 0 {
 		return
 	}
@@ -16,24 +14,25 @@ func printIrregular(recs recs, today time.Time) {
 	tomorrow := today.AddDate(0, 0, 1)
 	for !date.After(max) {
 		if date.Equal(tomorrow) {
-			fmt.Println()
+			out += "\n"
 		}
 		if !date.Equal(tomorrow) && date.After(today) && time.Monday == date.Weekday() {
-			fmt.Println(separator)
+			out += "\n"
 		}
 		ms := matchingDates(date, recs)
 		if date.After(today) {
-			fmt.Println(prettyDate(date))
+			out += prettyDate(date) + "\n"
 			for _, m := range ms {
-				fmt.Println(prettyDescOnly(m.desc))
+				out += prettyDescOnly(m.desc) + "\n"
 			}
 		} else {
 			for _, m := range ms {
-				fmt.Println(prettyRegular(m))
+				out += prettyRegular(m) + "\n"
 			}
 		}
 		date = date.AddDate(0, 0, 1)
 	}
+	return
 }
 
 func matchingDates(date time.Time, recs recs) (matches recs) {
@@ -45,15 +44,16 @@ func matchingDates(date time.Time, recs recs) (matches recs) {
 	return
 }
 
-func printRegular(recs recs, today time.Time) {
+func printRegular(recs recs, today time.Time) (out string) {
 	foundTomorrow := false
 	for _, r := range recs {
 		if r.date.After(today) && !foundTomorrow {
-			fmt.Println()
 			foundTomorrow = true
+			out += "\n"
 		}
-		fmt.Println(prettyRegular(r))
+		out += prettyRegular(r) + "\n"
 	}
+	return
 }
 
 func prettyRegular(r rec) string {

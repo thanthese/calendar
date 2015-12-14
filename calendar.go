@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"time"
@@ -22,19 +24,47 @@ func (rs recs) Less(i, j int) bool {
 	return rs[i].desc < rs[j].desc
 }
 
+type opt int
+
+const (
+	regOpt opt = iota
+	irrOpt
+	defaultOpt
+)
+
 func main() {
+	opts := getOptions()
 	bytes, _ := ioutil.ReadAll(os.Stdin)
-	blob := string(bytes)
-	today := today()
-	recs, irregular := parseBlob(blob, today)
-	if irregular {
-		printRegular(recs, today)
-	} else {
-		printIrregular(recs, today)
+	fmt.Print(toggle(string(bytes), today(), opts))
+}
+
+func getOptions() opt {
+	irr := flag.Bool("i", false, "Force irregular printout.")
+	reg := flag.Bool("w", false, "Force regular printout.")
+	flag.Parse()
+
+	if *irr && *reg {
+		fmt.Println("ERROR: Can't set both -i and -r flags.")
+		os.Exit(1)
 	}
+	if *irr {
+		return irrOpt
+	}
+	if *reg {
+		return regOpt
+	}
+	return defaultOpt
+}
+
+func toggle(blob string, today time.Time, opt opt) string {
+	recs, irregular := parseBlob(blob, today)
+	if opt == irrOpt || (opt == defaultOpt && irregular) {
+		return printRegular(recs, today)
+	}
+	return printIrregular(recs, today)
 }
 
 func today() time.Time {
-	now := time.Now()
-	return time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.UTC)
+	n := time.Now()
+	return time.Date(n.Year(), n.Month(), n.Day(), 0, 0, 0, 0, time.UTC)
 }

@@ -39,8 +39,11 @@ func parseBlob(blob string, today time.Time) (recs recs, irregular bool) {
 		y, _ := strconv.Atoi(fields[1])
 		m, _ := strconv.Atoi(fields[2])
 		d, _ := strconv.Atoi(fields[3])
-		desc := strings.TrimSpace(fields[4])
 		lastDate = time.Date(2000+y, time.Month(m), d, 0, 0, 0, 0, time.UTC)
+		desc := strings.TrimSpace(fields[4])
+		if desc == "" {
+			continue
+		}
 		recs = append(recs, rec{lastDate, desc})
 	}
 	sort.Sort(recs)
