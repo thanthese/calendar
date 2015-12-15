@@ -40,7 +40,7 @@ func main() {
 
 func getOptions() opt {
 	irr := flag.Bool("i", false, "Force irregular printout.")
-	reg := flag.Bool("w", false, "Force regular printout.")
+	reg := flag.Bool("r", false, "Force regular printout.")
 	flag.Parse()
 
 	if *irr && *reg {
@@ -58,7 +58,7 @@ func getOptions() opt {
 
 func toggle(blob string, today time.Time, opt opt) string {
 	recs, irregular := parseBlob(blob, today)
-	if opt == irrOpt || (opt == defaultOpt && irregular) {
+	if opt == regOpt || (opt == defaultOpt && irregular) {
 		return printRegular(recs, today)
 	}
 	return printIrregular(recs, today)
