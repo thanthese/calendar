@@ -13,10 +13,8 @@ func printIrregular(recs recs, today time.Time) (out string) {
 	date := min
 	tomorrow := today.AddDate(0, 0, 1)
 	for !date.After(max) {
-		if date.Equal(tomorrow) {
-			out += "\n"
-		}
-		if !date.Equal(tomorrow) && date.After(today) && time.Monday == date.Weekday() {
+		if date.Equal(tomorrow) ||
+			(date.After(today) && time.Monday == date.Weekday()) {
 			out += "\n"
 		}
 		ms := matchingDates(date, recs)
