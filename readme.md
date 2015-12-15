@@ -27,7 +27,9 @@ After
     15.12.21m
         before
 
-Blank lines are inserted between weeks (which start on Mondays). There's also some special logic involving prints dates before or near today which mostly exist to satisfy my own peculiarities.
+Blank lines are inserted between weeks (which start on Mondays). Lines are sorted alphabetically after each transformation. There's also some special logic involving printing dates before or near today which mostly exist to satisfy my own peculiarities.
+
+The utility reads the format of current stream and toggles to the other one. To force `regular` (top example) or `irregular` (bottom example) mode, use the `-r` or `-i` flags.
 
 # Installation
 
