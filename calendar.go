@@ -29,6 +29,7 @@ type opt int
 const (
 	regOpt opt = iota
 	irrOpt
+	sameOpt
 	defaultOpt
 )
 
@@ -41,24 +42,31 @@ func main() {
 func getOptions() opt {
 	irr := flag.Bool("i", false, "Force irregular printout.")
 	reg := flag.Bool("r", false, "Force regular printout.")
+	same := flag.Bool("s", false, "Force same as input style.")
 	flag.Parse()
 
-	if *irr && *reg {
-		fmt.Println("ERROR: Can't set both -i and -r flags.")
+	if (*irr && *reg) || (*irr && *same) || (*reg && *same) {
+		fmt.Println("ERROR: Cannot set more than one flag.")
 		os.Exit(1)
 	}
+
 	if *irr {
 		return irrOpt
 	}
 	if *reg {
 		return regOpt
 	}
+	if *same {
+		return sameOpt
+	}
 	return defaultOpt
 }
 
 func toggle(blob string, today time.Time, opt opt) string {
-	recs, irregular := parseBlob(blob, today)
-	if opt == regOpt || (opt == defaultOpt && irregular) {
+	recs, irrInput := parseBlob(blob, today)
+	if opt == regOpt ||
+		(opt == defaultOpt && irrInput) ||
+		(opt == sameOpt && !irrInput) {
 		return printRegular(recs, today)
 	}
 	return printIrregular(recs, today)
