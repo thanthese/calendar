@@ -10,6 +10,9 @@ func printIrregular(recs recs, today time.Time) (out string) {
 		return
 	}
 	min, max := recs[0].date, recs[len(recs)-1].date
+	if today.Before(min) {
+		min = today
+	}
 	date := min
 	tomorrow := today.AddDate(0, 0, 1)
 	for !date.After(max) {
