@@ -13,9 +13,8 @@ func printIrregular(recs recs, today time.Time) (out string) {
 	if today.Before(min) {
 		min = today
 	}
-	date := min
 	tomorrow := today.AddDate(0, 0, 1)
-	for !date.After(max) {
+	for date := min; !date.After(max); date = date.AddDate(0, 0, 1) {
 		if date.Equal(tomorrow) ||
 			(date.After(today) && time.Monday == date.Weekday()) {
 			out += "\n"
@@ -31,7 +30,6 @@ func printIrregular(recs recs, today time.Time) (out string) {
 				out += prettyRegular(m) + "\n"
 			}
 		}
-		date = date.AddDate(0, 0, 1)
 	}
 	return
 }
