@@ -16,7 +16,6 @@ func TestToggle(t *testing.T) {
 
 15.12.12s beets
 15.12.13u battlestar
-
 15.12.14m galactica`, `15.12.09w bears
 
 15.12.12s
