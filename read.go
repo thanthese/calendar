@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-var recRegex = regexp.MustCompile(`^(\d\d).(\d\d).(\d\d)[mtwrfsu](.*)`)
+var recRegex = regexp.MustCompile(`^(\d\d).(\d\d).(\d\d)[mtwrfsu]?(.*)`)
 
 // Parse some multi-line text blob into usable recs.
 //
