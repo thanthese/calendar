@@ -44,10 +44,10 @@ func matchingDates(date time.Time, recs recs) (matches recs) {
 }
 
 func printRegular(recs recs, today time.Time) (out string) {
-	foundTomorrow := false
+	foundBreak := false
 	for _, r := range recs {
-		if r.date.After(today) && !foundTomorrow {
-			foundTomorrow = true
+		if r.date.After(today) && !foundBreak {
+			foundBreak = true
 			out += "\n"
 		}
 		out += prettyRegular(r) + "\n"
