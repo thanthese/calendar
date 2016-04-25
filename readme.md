@@ -35,7 +35,7 @@ The utility reads the format of current stream and toggles to the other one. To 
 
 # Installation
 
-    $ go get https://github.com/thanthese/toggle-calendar
+    $ go get github.com/thanthese/toggle-calendar
 
 # License
 
