@@ -74,9 +74,6 @@ func prettyDate(d time.Time) string {
 }
 
 func prettyTodos(doc doc) (out string) {
-	if len(doc.todos) == 0 {
-		return
-	}
 	for _, t := range doc.todos {
 		out += t + "\n"
 	}

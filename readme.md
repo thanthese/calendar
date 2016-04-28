@@ -33,7 +33,7 @@ Blank lines are inserted between weeks (which start on Mondays). Lines are sorte
 
 Any lines above the magical line `# tickler` will pass through unchanged. I like to put todo items at the top of my calendar.
 
-The utility reads the format of current stream and toggles to the other one. To force `regular` or `irregular` mode, use the `-regular` or `-irregular` flags. Use `-same` to write out with the same format as the input.
+The utility reads the format of current stream and toggles to the other one. To force `regular` or `irregular` mode, use the `--regular` or `--irregular` flags. Use `--same` to write out with the same format as the input.
 
 # Installation
 
