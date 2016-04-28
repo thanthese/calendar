@@ -31,7 +31,9 @@ Regular mode only lists dates where events exist. Irregular mode always lists al
 
 Blank lines are inserted between weeks (which start on Mondays). Lines are sorted alphabetically after each transformation. There's also some special logic involving printing dates before or near today which mostly exist to satisfy my odd preferences.
 
-The utility reads the format of current stream and toggles to the other one. To force `regular` or `irregular` mode, use the `-r` or `-i` flags. Use `-s` to write out with the same format as the input.
+Any lines above the magical line `# tickler` will pass through unchanged. I like to put todo items at the top of my calendar.
+
+The utility reads the format of current stream and toggles to the other one. To force `regular` or `irregular` mode, use the `-regular` or `-irregular` flags. Use `-same` to write out with the same format as the input.
 
 # Installation
 

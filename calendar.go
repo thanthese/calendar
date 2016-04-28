@@ -8,11 +8,14 @@ import (
 	"time"
 )
 
+// A rec is a single entry in the calendar, like "16.04.26t some text".
 type rec struct {
 	date time.Time
 	desc string
 }
 
+// Many recs, like a whole calendar. This struct just exists so I can sort
+// recs.
 type recs []rec
 
 func (rs recs) Len() int      { return len(rs) }
@@ -24,25 +27,27 @@ func (rs recs) Less(i, j int) bool {
 	return rs[i].desc < rs[j].desc
 }
 
+// The whole document, including the todo front matter. "# tickler" is included
+// in the "todo" section.
+type doc struct {
+	todos []string
+	recs  recs
+}
+
+// options from the command line
 type opt int
 
 const (
-	regOpt opt = iota
+	toggleOpt opt = iota // default
+	regOpt
 	irrOpt
 	sameOpt
-	defaultOpt
 )
 
-func main() {
-	opts := getOptions()
-	bytes, _ := ioutil.ReadAll(os.Stdin)
-	fmt.Print(toggle(string(bytes), today(), opts))
-}
-
-func getOptions() opt {
-	irr := flag.Bool("i", false, "Force irregular printout.")
-	reg := flag.Bool("r", false, "Force regular printout.")
-	same := flag.Bool("s", false, "Force same as input style.")
+func parseCommandLineArgs() opt {
+	reg := flag.Bool("regular", false, "Use regular format.")
+	irr := flag.Bool("irregular", false, "Use irregular format.")
+	same := flag.Bool("same", false, "Use input's format.")
 	flag.Parse()
 
 	if (*irr && *reg) || (*irr && *same) || (*reg && *same) {
@@ -59,17 +64,24 @@ func getOptions() opt {
 	if *same {
 		return sameOpt
 	}
-	return defaultOpt
+	return toggleOpt
 }
 
-func toggle(blob string, today time.Time, opt opt) string {
-	recs, irrInput := parseBlob(blob, today)
+func main() {
+	opts := parseCommandLineArgs()
+	bytes, _ := ioutil.ReadAll(os.Stdin)
+	fmt.Print(transform(string(bytes), today(), opts))
+}
+
+// The heart of the program, changes a blob of text to another blob of text.
+func transform(blob string, today time.Time, opt opt) string {
+	doc, irrInput := parseBlob(blob, today)
 	if opt == regOpt ||
-		(opt == defaultOpt && irrInput) ||
+		(opt == toggleOpt && irrInput) ||
 		(opt == sameOpt && !irrInput) {
-		return printRegular(recs, today)
+		return printRegular(doc, today)
 	}
-	return printIrregular(recs, today)
+	return printIrregular(doc, today)
 }
 
 func today() time.Time {
