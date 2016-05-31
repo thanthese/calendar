@@ -27,13 +27,6 @@ func (rs recs) Less(i, j int) bool {
 	return rs[i].desc < rs[j].desc
 }
 
-// The whole document, including the todo front matter. "# tickler" is included
-// in the "todo" section.
-type doc struct {
-	todos []string
-	recs  recs
-}
-
 // options from the command line
 type opt int
 
@@ -75,13 +68,13 @@ func main() {
 
 // The heart of the program, changes a blob of text to another blob of text.
 func transform(blob string, today time.Time, opt opt) string {
-	doc, irrInput := parseBlob(blob, today)
+	recs, irrInput := parseBlob(blob, today)
 	if opt == regOpt ||
 		(opt == toggleOpt && irrInput) ||
 		(opt == sameOpt && !irrInput) {
-		return printRegular(doc, today)
+		return printRegular(recs, today)
 	}
-	return printIrregular(doc, today)
+	return printIrregular(recs, today)
 }
 
 func today() time.Time {

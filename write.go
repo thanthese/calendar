@@ -5,12 +5,11 @@ import (
 	"time"
 )
 
-func printIrregular(doc doc, today time.Time) (out string) {
-	out += prettyTodos(doc)
-	if len(doc.recs) == 0 {
+func printIrregular(recs recs, today time.Time) (out string) {
+	if len(recs) == 0 {
 		return
 	}
-	min, max := doc.recs[0].date, doc.recs[len(doc.recs)-1].date
+	min, max := recs[0].date, recs[len(recs)-1].date
 	if today.Before(min) {
 		min = today
 	}
@@ -20,7 +19,7 @@ func printIrregular(doc doc, today time.Time) (out string) {
 			(date.After(today) && time.Monday == date.Weekday()) {
 			out += "\n"
 		}
-		ms := matchingDates(date, doc.recs)
+		ms := matchingDates(date, recs)
 		if date.After(today) {
 			out += prettyDate(date) + "\n"
 			for _, m := range ms {
@@ -44,10 +43,9 @@ func matchingDates(date time.Time, recs recs) (matches recs) {
 	return
 }
 
-func printRegular(doc doc, today time.Time) (out string) {
-	out += prettyTodos(doc)
+func printRegular(recs recs, today time.Time) (out string) {
 	foundBreak := false
-	for _, r := range doc.recs {
+	for _, r := range recs {
 		if r.date.After(today) && !foundBreak {
 			foundBreak = true
 			out += "\n"
@@ -71,11 +69,4 @@ func prettyDate(d time.Time) string {
 		int(d.Month()),
 		d.Day(),
 		"umtwrfs"[d.Weekday()])
-}
-
-func prettyTodos(doc doc) (out string) {
-	for _, t := range doc.todos {
-		out += t + "\n"
-	}
-	return
 }

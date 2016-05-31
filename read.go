@@ -12,9 +12,6 @@ var recRegex = regexp.MustCompile(`^(\d\d).(\d\d).(\d\d)[mtwrfsu]?(.*)`)
 
 // Parse some multi-line text blob into usable recs.
 //
-// Considers everything up to and including the "# tickler" line to be todo
-// front matter.
-//
 // Within the calendar section very non-empty, non-whitespace-only line gets a
 // date associated with it. If a date is given, it gets that one. If no date
 // was given, it uses the last one. If there was no last one, it uses today.
@@ -26,15 +23,8 @@ var recRegex = regexp.MustCompile(`^(\d\d).(\d\d).(\d\d)[mtwrfsu]?(.*)`)
 //
 // Whitespace is treated without mercy. Empty lines are filtered out and
 // everything is trimmed.
-func parseBlob(blob string, today time.Time) (doc doc, irregular bool) {
+func parseBlob(blob string, today time.Time) (recs recs, irregular bool) {
 	lines := strings.Split(blob, "\n")
-	for i, line := range lines {
-		if line == "# tickler" {
-			doc.todos = lines[:i+1]
-			lines = lines[i+1:]
-			break
-		}
-	}
 	lastDate := today
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
@@ -43,7 +33,7 @@ func parseBlob(blob string, today time.Time) (doc doc, irregular bool) {
 		}
 		fields := recRegex.FindStringSubmatch(line)
 		if len(fields) == 0 {
-			doc.recs = append(doc.recs, rec{lastDate, line})
+			recs = append(recs, rec{lastDate, line})
 			irregular = true
 			continue
 		}
@@ -55,8 +45,8 @@ func parseBlob(blob string, today time.Time) (doc doc, irregular bool) {
 		if desc == "" {
 			continue
 		}
-		doc.recs = append(doc.recs, rec{lastDate, desc})
+		recs = append(recs, rec{lastDate, desc})
 	}
-	sort.Sort(doc.recs)
+	sort.Sort(recs)
 	return
 }
